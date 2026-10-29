@@ -6,8 +6,8 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 
 ## 📥 Direct Download
 
-* **Release APK (~18 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.0.0/app-release.apk)
-* **GitHub Releases**: [v1.0.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.0.0)
+* **Release APK (~18 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.1.0/app-release.apk)
+* **GitHub Releases**: [v1.1.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.1.0)
 
 ---
 
@@ -21,14 +21,15 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 ---
 
 ## 📱 Features
-1. **Instant Screen Lock**: Tap the floating circle to lock immediately.
-2. **Draggable & Persistent**: Drag it anywhere along the screen edges; position is automatically saved in `SharedPreferences`.
-3. **No Special Permissions Needed**: Leverages `AccessibilityService`'s native `TYPE_ACCESSIBILITY_OVERLAY`, so it doesn't even require `SYSTEM_ALERT_WINDOW` ("Display over other apps").
+1. **Instant Screen Lock**: Tap the floating button to immediately lock your device.
+2. **Volume Slider on Tap & Hold**: Tap and hold the button to bring up the native Android volume panel (with subtle haptic feedback).
+3. **Draggable & Persistent**: Drag it anywhere along the screen edges; position is automatically saved in `SharedPreferences`.
+4. **No Special Permissions Needed**: Leverages `AccessibilityService`'s native `TYPE_ACCESSIBILITY_OVERLAY`, so it doesn't even require `SYSTEM_ALERT_WINDOW` ("Display over other apps").
 
 ---
 
 ## 🚀 Setup on Pixel 6a
-1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.0.0/app-release.apk) onto your phone and install it.
+1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.1.0/app-release.apk) onto your phone and install it.
 2. Open **Floating Lock Button**.
 3. Tap **Enable in Accessibility Settings**.
 4. Turn on **Floating Lock Service**.

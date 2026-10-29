@@ -49,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:text="Zero bloat. Tap the floating icon anytime to lock the screen. Biometric/fingerprint unlock remains fully functional."
+        android:text="Zero bloat.\n• Tap: Instantly locks the screen.\n• Tap & hold: Shows Android volume slider.\n• Drag: Move anywhere along screen edges."
         android:textColor="#64748B"
         android:textSize="13sp" />
 
