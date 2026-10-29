@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Floating Lock Button</string>
+    <string name="service_name">Floating Lock Service</string>
+    <string name="service_description">Displays a lightweight floating button on your screen. Tapping it instantly locks your device without needing the physical power button.</string>
+</resources>
+
