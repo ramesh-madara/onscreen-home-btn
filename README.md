@@ -4,12 +4,19 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 
 ---
 
+## 📥 Direct Download
+
+* **Release APK (~18 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.0.0/app-release.apk)
+* **GitHub Releases**: [v1.0.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.0.0)
+
+---
+
 ## ⚡ Zero-Bloat Specifications
 * **CPU Consumption**: **0.0%** when idle. Fully event-driven; Android only wakes the touch listener when finger touches the button.
 * **Power / Battery Consumption**: Virtually undetectable (**0%**). No background loops, no alarms, no wake-locks, no polling.
 * **Biometric Support**: Uses `AccessibilityService.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)`. Unlike Device Admin (`lockNow()`), this **does not disable fingerprint unlock** on Pixel phones.
 * **Dependencies**: **0 external libraries** (no Jetpack, no AndroidX, no Kotlin stdlib).
-* **Estimated APK Size**: **~20 to 30 KB** total.
+* **APK Size**: **~18 KB** total.
 
 ---
 
@@ -20,9 +27,20 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 
 ---
 
+## 🚀 Setup on Pixel 6a
+1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.0.0/app-release.apk) onto your phone and install it.
+2. Open **Floating Lock Button**.
+3. Tap **Enable in Accessibility Settings**.
+4. Turn on **Floating Lock Service**.
+5. The lock button immediately appears on your screen. Tap it to lock!
+
+---
+
 ## 📁 Project Structure
 ```
 onscreen-home-btn/
+├── .github/workflows/
+│   └── build.yml                  # GitHub Actions CI build & release workflow
 ├── app/
 │   ├── build.gradle
 │   └── src/main/
