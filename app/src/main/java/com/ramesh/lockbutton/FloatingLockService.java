@@ -205,15 +205,17 @@ public class FloatingLockService extends AccessibilityService {
         );
         sParams.gravity = Gravity.TOP | Gravity.START;
 
-        // Position horizontally: if lock button is on left half of screen, place screenshot to right; else to left
-        if (layoutParams.x < screenWidth / 2) {
-            sParams.x = layoutParams.x + lockSize + margin;
-        } else {
-            sParams.x = layoutParams.x - screenshotSize - margin;
-        }
+        // Horizontally centered relative to the lock button
+        sParams.x = layoutParams.x + (lockSize - screenshotSize) / 2;
 
-        // Vertically centered relative to the lock button
-        sParams.y = layoutParams.y + (lockSize - screenshotSize) / 2;
+        // Position vertically: by default on top (above lock button).
+        // If in proximity to the top border, place on bottom.
+        int topBorderThreshold = Math.max(screenHeight / 3, dpToPx(140));
+        if (layoutParams.y < topBorderThreshold) {
+            sParams.y = layoutParams.y + lockSize + margin;
+        } else {
+            sParams.y = layoutParams.y - screenshotSize - margin;
+        }
 
         // Clamp inside screen bounds
         sParams.x = Math.max(margin, Math.min(sParams.x, screenWidth - screenshotSize - margin));
