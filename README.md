@@ -6,8 +6,8 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 
 ## 📥 Direct Download
 
-* **Release APK (~19 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.2.0/app-release.apk)
-* **GitHub Releases**: [v1.2.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.2.0)
+* **Release APK (~22 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.3.0/app-release.apk)
+* **GitHub Releases**: [v1.3.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.3.0)
 
 ---
 
@@ -15,9 +15,10 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 * **CPU Consumption**: **0.0%** when idle. Fully event-driven; Android only wakes the touch listener when finger touches the button.
 * **Power / Battery Consumption**: Virtually undetectable (**0%**). No background loops, no alarms, no wake-locks, no polling.
 * **Biometric Support**: Uses `AccessibilityService.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)`. Unlike Device Admin (`lockNow()`), this **does not disable fingerprint unlock** on Pixel phones.
+* **Pixel Adaptive Vector Icon**: Custom crystal padlock vector icon with Material You Dynamic Color themed icon support.
 * **Clean Screenshots**: Triggering screenshot hides both the lock button and screenshot button before the image is captured.
 * **Dependencies**: **0 external libraries** (no Jetpack, no AndroidX, no Kotlin stdlib).
-* **APK Size**: **~19 KB** total.
+* **APK Size**: **~22 KB** total.
 
 ---
 
@@ -35,7 +36,7 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 ---
 
 ## 🚀 Setup on Pixel 6a
-1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.2.0/app-release.apk) onto your phone and install it.
+1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.3.0/app-release.apk) onto your phone and install it.
 2. Open **Floating Lock Button**.
 3. Tap **Enable in Accessibility Settings**.
 4. Turn on **Floating Lock Service**.

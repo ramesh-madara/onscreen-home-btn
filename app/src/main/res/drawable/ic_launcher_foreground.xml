@@ -1,0 +1,94 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+
+    <group
+        android:pivotX="256"
+        android:pivotY="280"
+        android:scaleX="0.66"
+        android:scaleY="0.66">
+
+        <!-- Outer Glowing Circles & Base Arcs -->
+        <path
+            android:pathData="M 256,135 A 125,125 0 1,0 256,385 A 125,125 0 1,0 256,135"
+            android:strokeColor="#5D9BD9"
+            android:strokeAlpha="0.9"
+            android:strokeWidth="2" />
+
+        <path
+            android:pathData="M 256,105 A 155,155 0 1,0 256,415 A 155,155 0 1,0 256,105"
+            android:strokeColor="#5D9BD9"
+            android:strokeAlpha="0.9"
+            android:strokeWidth="3" />
+
+        <path
+            android:pathData="M 145,410 A 185,185 0 1,1 367,410"
+            android:strokeColor="#5D9BD9"
+            android:strokeAlpha="0.9"
+            android:strokeWidth="4"
+            android:strokeLineCap="round" />
+
+        <path
+            android:pathData="M 145,435 A 111,20 0 0,0 342,435 M 357,435 A 111,20 0 0,0 367,435"
+            android:strokeColor="#5D9BD9"
+            android:strokeWidth="4"
+            android:strokeLineCap="round" />
+
+        <path
+            android:pathData="M 185,455 A 71,14 0 0,0 327,455"
+            android:strokeColor="#5D9BD9"
+            android:strokeWidth="4"
+            android:strokeLineCap="round" />
+
+        <!-- Shackle / Handle -->
+        <path
+            android:pathData="M 215,205 V 145 A 41,41 0 0,1 256,104 V 104"
+            android:strokeColor="#86D1E6"
+            android:strokeWidth="20"
+            android:strokeLineCap="butt" />
+
+        <path
+            android:pathData="M 297,205 V 145 A 41,41 0 0,0 256,104 V 104"
+            android:strokeColor="#5CBBD6"
+            android:strokeWidth="20"
+            android:strokeLineCap="butt" />
+
+        <!-- Faceted Crystal Body -->
+        <path
+            android:pathData="M 256,185 L 215,205 L 175,150 L 175,230 L 145,280 L 256,300 Z"
+            android:fillColor="#86D1E6" />
+
+        <path
+            android:pathData="M 256,185 L 297,205 L 337,150 L 337,230 L 367,280 L 256,300 Z"
+            android:fillColor="#5CBBD6" />
+
+        <path
+            android:pathData="M 145,280 L 256,370 L 256,300 Z"
+            android:fillColor="#D4F1F9" />
+
+        <path
+            android:pathData="M 367,280 L 256,370 L 256,300 Z"
+            android:fillColor="#86D1E6" />
+
+        <path
+            android:pathData="M 182,165 L 208,205 L 182,220 Z"
+            android:fillColor="#5CBBD6" />
+
+        <path
+            android:pathData="M 330,165 L 304,205 L 330,220 Z"
+            android:fillColor="#3A98BF" />
+
+        <!-- Keyhole -->
+        <path
+            android:pathData="M 256,283 A 12,12 0 1,0 256,307 A 12,12 0 1,0 256,283 Z"
+            android:fillColor="#17153B" />
+
+        <path
+            android:pathData="M 252,300 L 245,325 L 267,325 L 260,300 Z"
+            android:fillColor="#17153B" />
+
+    </group>
+
+</vector>
