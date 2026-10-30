@@ -80,16 +80,11 @@
             android:pathData="M 330,165 L 304,205 L 330,220 Z"
             android:fillColor="#3A98BF" />
 
-        <!-- Keyhole -->
+        <!-- Keyhole (Solid, sharp cutout matching SVG) -->
         <path
-            android:pathData="M 256,283 A 12,12 0 1,0 256,307 A 12,12 0 1,0 256,283 Z"
-            android:fillColor="#17153B" />
-
-        <path
-            android:pathData="M 252,300 L 245,325 L 267,325 L 260,300 Z"
+            android:pathData="M 256,283 C 262.63,283 268,288.37 268,295 C 268,297.5 266.5,300 260,300 L 267,325 L 245,325 L 252,300 C 245.5,300 244,297.5 244,295 C 244,288.37 249.37,283 256,283 Z"
             android:fillColor="#17153B" />
 
     </group>
 
 </vector>
-

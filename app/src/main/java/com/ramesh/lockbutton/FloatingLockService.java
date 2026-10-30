@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
@@ -29,8 +30,8 @@ public class FloatingLockService extends AccessibilityService {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private static final String PREFS_NAME = "lock_btn_prefs";
-    private static final String KEY_X = "btn_x";
-    private static final String KEY_Y = "btn_y";
+    private static final String KEY_PERCENT_X = "btn_percent_x";
+    private static final String KEY_PERCENT_Y = "btn_percent_y";
 
     private final Runnable dismissScreenshotRunnable = new Runnable() {
         @Override
@@ -53,6 +54,29 @@ public class FloatingLockService extends AccessibilityService {
         super.onServiceConnected();
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         showFloatingButton();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        hideScreenshotButton();
+        if (floatingView != null && windowManager != null) {
+            int buttonSize = dpToPx(52);
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            int maxX = Math.max(0, dm.widthPixels - buttonSize);
+            int maxY = Math.max(0, dm.heightPixels - buttonSize);
+
+            float percentX = Math.max(0f, Math.min(1f, prefs.getFloat(KEY_PERCENT_X, 0.95f)));
+            float percentY = Math.max(0f, Math.min(1f, prefs.getFloat(KEY_PERCENT_Y, 0.4f)));
+
+            layoutParams.x = Math.max(0, Math.min(Math.round(percentX * maxX), maxX));
+            layoutParams.y = Math.max(0, Math.min(Math.round(percentY * maxY), maxY));
+
+            try {
+                windowManager.updateViewLayout(floatingView, layoutParams);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -84,17 +108,37 @@ public class FloatingLockService extends AccessibilityService {
         int padding = dpToPx(14);
         button.setPadding(padding, padding, padding, padding);
 
+        // FLAG_LAYOUT_NO_LIMITS removed: enforce display boundaries
         layoutParams = new WindowManager.LayoutParams(
                 buttonSize,
                 buttonSize,
                 WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
 
         layoutParams.gravity = Gravity.TOP | Gravity.START;
-        layoutParams.x = prefs.getInt(KEY_X, dpToPx(20));
-        layoutParams.y = prefs.getInt(KEY_Y, dpToPx(250));
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int maxX = Math.max(0, dm.widthPixels - buttonSize);
+        int maxY = Math.max(0, dm.heightPixels - buttonSize);
+
+        float percentX = prefs.getFloat(KEY_PERCENT_X, -1f);
+        float percentY = prefs.getFloat(KEY_PERCENT_Y, -1f);
+
+        if (percentX < 0 || percentY < 0) {
+            // Backward compatibility for legacy coordinate keys
+            int legacyX = prefs.getInt("btn_x", maxX);
+            int legacyY = prefs.getInt("btn_y", dpToPx(250));
+            percentX = maxX > 0 ? (float) legacyX / maxX : 0.95f;
+            percentY = maxY > 0 ? (float) legacyY / maxY : 0.4f;
+        }
+
+        percentX = Math.max(0f, Math.min(1f, percentX));
+        percentY = Math.max(0f, Math.min(1f, percentY));
+
+        layoutParams.x = Math.round(percentX * maxX);
+        layoutParams.y = Math.round(percentY * maxY);
 
         button.setOnTouchListener(new View.OnTouchListener() {
             private int initialX;
@@ -141,8 +185,14 @@ public class FloatingLockService extends AccessibilityService {
                         if (isDragging) {
                             int deltaX = (int) (event.getRawX() - initialTouchX);
                             int deltaY = (int) (event.getRawY() - initialTouchY);
-                            layoutParams.x = initialX + deltaX;
-                            layoutParams.y = initialY + deltaY;
+
+                            DisplayMetrics dmMove = getResources().getDisplayMetrics();
+                            int maxMoveX = Math.max(0, dmMove.widthPixels - buttonSize);
+                            int maxMoveY = Math.max(0, dmMove.heightPixels - buttonSize);
+
+                            // Strict clamping: button remains 100% inside screen bounds at all times
+                            layoutParams.x = Math.max(0, Math.min(initialX + deltaX, maxMoveX));
+                            layoutParams.y = Math.max(0, Math.min(initialY + deltaY, maxMoveY));
                             windowManager.updateViewLayout(floatingView, layoutParams);
                         }
                         return true;
@@ -161,11 +211,21 @@ public class FloatingLockService extends AccessibilityService {
                             // Tap: instantly lock the screen
                             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN);
                         } else {
-                            // Dragged & released: save coordinates and show transient screenshot button
+                            // Save percentage coordinates so position scales across screen rotations
+                            DisplayMetrics dmUp = getResources().getDisplayMetrics();
+                            int maxUpX = Math.max(0, dmUp.widthPixels - buttonSize);
+                            int maxUpY = Math.max(0, dmUp.heightPixels - buttonSize);
+
+                            float pX = maxUpX > 0 ? (float) layoutParams.x / maxUpX : 0f;
+                            float pY = maxUpY > 0 ? (float) layoutParams.y / maxUpY : 0f;
+                            pX = Math.max(0f, Math.min(1f, pX));
+                            pY = Math.max(0f, Math.min(1f, pY));
+
                             prefs.edit()
-                                    .putInt(KEY_X, layoutParams.x)
-                                    .putInt(KEY_Y, layoutParams.y)
+                                    .putFloat(KEY_PERCENT_X, pX)
+                                    .putFloat(KEY_PERCENT_Y, pY)
                                     .apply();
+
                             showScreenshotButton();
                         }
                         return true;
@@ -200,7 +260,7 @@ public class FloatingLockService extends AccessibilityService {
                 screenshotSize,
                 screenshotSize,
                 WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
         sParams.gravity = Gravity.TOP | Gravity.START;

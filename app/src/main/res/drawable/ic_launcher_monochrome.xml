@@ -59,7 +59,7 @@
             android:strokeWidth="20"
             android:strokeLineCap="butt" />
 
-        <!-- Faceted Crystal Body with subtle lighting gradations -->
+        <!-- Upper Facets -->
         <path
             android:pathData="M 256,185 L 215,205 L 175,150 L 175,230 L 145,280 L 256,300 Z"
             android:fillColor="#FFFFFF"
@@ -71,16 +71,6 @@
             android:fillAlpha="0.7" />
 
         <path
-            android:pathData="M 145,280 L 256,370 L 256,300 Z"
-            android:fillColor="#FFFFFF"
-            android:fillAlpha="1.0" />
-
-        <path
-            android:pathData="M 367,280 L 256,370 L 256,300 Z"
-            android:fillColor="#FFFFFF"
-            android:fillAlpha="0.85" />
-
-        <path
             android:pathData="M 182,165 L 208,205 L 182,220 Z"
             android:fillColor="#FFFFFF"
             android:fillAlpha="0.65" />
@@ -90,7 +80,13 @@
             android:fillColor="#FFFFFF"
             android:fillAlpha="0.5" />
 
+        <!-- Front Facets with Keyhole Punched Out via evenOdd -->
+        <path
+            android:fillType="evenOdd"
+            android:fillColor="#FFFFFF"
+            android:fillAlpha="0.95"
+            android:pathData="M 145,280 L 256,370 L 367,280 L 256,300 Z M 256,283 C 262.63,283 268,288.37 268,295 C 268,297.5 266.5,300 260,300 L 267,325 L 245,325 L 252,300 C 245.5,300 244,297.5 244,295 C 244,288.37 249.37,283 256,283 Z" />
+
     </group>
 
 </vector>
-
