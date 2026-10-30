@@ -6,8 +6,8 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 
 ## 📥 Direct Download
 
-* **Release APK (~18 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.1.0/app-release.apk)
-* **GitHub Releases**: [v1.1.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.1.0)
+* **Release APK (~19 KB)**: [Download app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.2.0/app-release.apk)
+* **GitHub Releases**: [v1.2.0 Release Page](https://github.com/ramesh-madara/onscreen-home-btn/releases/tag/v1.2.0)
 
 ---
 
@@ -15,21 +15,27 @@ A zero-bloat, ultra-low power native Android utility that adds a floating lock b
 * **CPU Consumption**: **0.0%** when idle. Fully event-driven; Android only wakes the touch listener when finger touches the button.
 * **Power / Battery Consumption**: Virtually undetectable (**0%**). No background loops, no alarms, no wake-locks, no polling.
 * **Biometric Support**: Uses `AccessibilityService.performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN)`. Unlike Device Admin (`lockNow()`), this **does not disable fingerprint unlock** on Pixel phones.
+* **Clean Screenshots**: Triggering screenshot hides both the lock button and screenshot button before the image is captured.
 * **Dependencies**: **0 external libraries** (no Jetpack, no AndroidX, no Kotlin stdlib).
-* **APK Size**: **~18 KB** total.
+* **APK Size**: **~19 KB** total.
 
 ---
 
-## 📱 Features
-1. **Instant Screen Lock**: Tap the floating button to immediately lock your device.
-2. **Volume Slider on Tap & Hold**: Tap and hold the button to bring up the native Android volume panel (with subtle haptic feedback).
-3. **Draggable & Persistent**: Drag it anywhere along the screen edges; position is automatically saved in `SharedPreferences`.
-4. **No Special Permissions Needed**: Leverages `AccessibilityService`'s native `TYPE_ACCESSIBILITY_OVERLAY`, so it doesn't even require `SYSTEM_ALERT_WINDOW` ("Display over other apps").
+## 📱 Features & Interactions
+1. **Instant Screen Lock (Tap)**: Tap the floating button to immediately lock your device.
+2. **Volume Slider (Tap & Hold)**: Tap and hold the button to bring up the native Android volume panel.
+3. **Transient Screenshot Button (Drag & Drop)**:
+   * When you move and release the lock button, a compact 38dp screenshot button appears right next to it for **1 second**.
+   * Tap it to trigger an immediate native Android screenshot.
+   * Both buttons **temporarily disappear during capture**, so neither icon ever shows up in your screenshots.
+   * If not tapped, it automatically dismisses after 1 second.
+4. **Draggable & Persistent**: Drag it anywhere along the screen edges; position is automatically saved in `SharedPreferences`.
+5. **No Special Permissions Needed**: Leverages `AccessibilityService`'s native `TYPE_ACCESSIBILITY_OVERLAY`, so it doesn't even require `SYSTEM_ALERT_WINDOW` ("Display over other apps").
 
 ---
 
 ## 🚀 Setup on Pixel 6a
-1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.1.0/app-release.apk) onto your phone and install it.
+1. Download [app-release.apk](https://github.com/ramesh-madara/onscreen-home-btn/releases/download/v1.2.0/app-release.apk) onto your phone and install it.
 2. Open **Floating Lock Button**.
 3. Tap **Enable in Accessibility Settings**.
 4. Turn on **Floating Lock Service**.

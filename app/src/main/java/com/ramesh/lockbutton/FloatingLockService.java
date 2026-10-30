@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ public class FloatingLockService extends AccessibilityService {
 
     private WindowManager windowManager;
     private View floatingView;
+    private View screenshotView;
     private WindowManager.LayoutParams layoutParams;
     private SharedPreferences prefs;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -29,6 +31,13 @@ public class FloatingLockService extends AccessibilityService {
     private static final String PREFS_NAME = "lock_btn_prefs";
     private static final String KEY_X = "btn_x";
     private static final String KEY_Y = "btn_y";
+
+    private final Runnable dismissScreenshotRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hideScreenshotButton();
+        }
+    };
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -111,6 +120,7 @@ public class FloatingLockService extends AccessibilityService {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        hideScreenshotButton();
                         initialX = layoutParams.x;
                         initialY = layoutParams.y;
                         initialTouchX = event.getRawX();
@@ -151,11 +161,12 @@ public class FloatingLockService extends AccessibilityService {
                             // Tap: instantly lock the screen
                             performGlobalAction(GLOBAL_ACTION_LOCK_SCREEN);
                         } else {
-                            // Drag: save coordinates
+                            // Dragged & released: save coordinates and show transient screenshot button
                             prefs.edit()
                                     .putInt(KEY_X, layoutParams.x)
                                     .putInt(KEY_Y, layoutParams.y)
                                     .apply();
+                            showScreenshotButton();
                         }
                         return true;
                 }
@@ -169,6 +180,110 @@ public class FloatingLockService extends AccessibilityService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showScreenshotButton() {
+        hideScreenshotButton();
+        if (floatingView == null || windowManager == null) {
+            return;
+        }
+
+        int screenshotSize = dpToPx(38);
+        int lockSize = dpToPx(52);
+        int margin = dpToPx(10);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+
+        WindowManager.LayoutParams sParams = new WindowManager.LayoutParams(
+                screenshotSize,
+                screenshotSize,
+                WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                PixelFormat.TRANSLUCENT
+        );
+        sParams.gravity = Gravity.TOP | Gravity.START;
+
+        // Position horizontally: if lock button is on left half of screen, place screenshot to right; else to left
+        if (layoutParams.x < screenWidth / 2) {
+            sParams.x = layoutParams.x + lockSize + margin;
+        } else {
+            sParams.x = layoutParams.x - screenshotSize - margin;
+        }
+
+        // Vertically centered relative to the lock button
+        sParams.y = layoutParams.y + (lockSize - screenshotSize) / 2;
+
+        // Clamp inside screen bounds
+        sParams.x = Math.max(margin, Math.min(sParams.x, screenWidth - screenshotSize - margin));
+        sParams.y = Math.max(margin, Math.min(sParams.y, screenHeight - screenshotSize - margin));
+
+        ImageView sButton = new ImageView(this);
+        sButton.setContentDescription("Screenshot");
+        sButton.setHapticFeedbackEnabled(true);
+
+        GradientDrawable bg = new GradientDrawable();
+        bg.setShape(GradientDrawable.OVAL);
+        bg.setColor(0xA018181B);
+        bg.setStroke(dpToPx(1.5f), 0x40FFFFFF);
+        sButton.setBackground(bg);
+
+        sButton.setImageResource(R.drawable.ic_camera);
+        int pad = dpToPx(9);
+        sButton.setPadding(pad, pad, pad, pad);
+
+        sButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sButton.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
+                takeCleanScreenshot();
+            }
+        });
+
+        screenshotView = sButton;
+        try {
+            windowManager.addView(screenshotView, sParams);
+            handler.postDelayed(dismissScreenshotRunnable, 1000);
+        } catch (Exception e) {
+            screenshotView = null;
+        }
+    }
+
+    private void hideScreenshotButton() {
+        handler.removeCallbacks(dismissScreenshotRunnable);
+        if (windowManager != null && screenshotView != null) {
+            try {
+                windowManager.removeView(screenshotView);
+            } catch (Exception ignored) {
+            }
+            screenshotView = null;
+        }
+    }
+
+    private void takeCleanScreenshot() {
+        hideScreenshotButton();
+        if (floatingView != null) {
+            floatingView.setVisibility(View.INVISIBLE);
+        }
+
+        // 80ms delay (~5 display frames) ensures SurfaceFlinger composes without any overlay buttons
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                performGlobalAction(GLOBAL_ACTION_TAKE_SCREENSHOT);
+
+                // Restore floating lock button after screenshot capture completes
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (floatingView != null) {
+                            floatingView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, 600);
+            }
+        }, 80);
     }
 
     private void showVolumeSlider() {
@@ -186,6 +301,7 @@ public class FloatingLockService extends AccessibilityService {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
+        hideScreenshotButton();
         if (windowManager != null && floatingView != null) {
             try {
                 windowManager.removeView(floatingView);
